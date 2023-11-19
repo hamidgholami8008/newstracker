@@ -3,11 +3,10 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import logging
-from news_collect.news_keywords.database_crud import DBOperations
-from pymongo import MongoClient
-
+from news_keywords.database_crud import DBOperations
+import sys
+sys.path.append("..")
 # useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
 
 
 class NewsCollectPipeline:

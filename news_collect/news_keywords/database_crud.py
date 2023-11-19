@@ -21,7 +21,13 @@ class DBOperations:
 
         col = self.__set_or_create_collection(collection_name)
 
-        return col.find({field_name: 1})
+        return col.find({}, {field_name: True})
+
+    def get_cursor_find(self, collection_name: str):
+
+        col = self.__set_or_create_collection(collection_name)
+
+        return col.find({}, {'_id': False})
 
     def save_list_to_db(self, the_list: list, collection_name: str):
 
