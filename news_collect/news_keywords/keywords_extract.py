@@ -8,7 +8,6 @@ class KeywordsExtract:
 
         self.pos_tagger_obj = pos_tagger_obj
         self.the_normalizer = the_normalizer
-        print("KeywordExtract is instantiated")
 
     def find_keywords_of_sentence(self, sentence: str):
         # tokenizing the sentence (finding key-words)
@@ -18,6 +17,15 @@ class KeywordsExtract:
         tokenized_text_pos_tagged: list = self.pos_tagger_obj.tag(tokens=tokenized_text)
 
         return tokenized_text_pos_tagged
+
+    def find_keywords_of_list_of_sentences(self, the_list: list):
+
+        temp_dict = {}
+        for item in the_list:
+
+            temp_dict['sentence'] = self.find_keywords_of_sentence(item)
+
+        return temp_dict
 
     def get_tokenized_text(self, text: str):
         # normalizing every sentence
@@ -49,4 +57,3 @@ class KeywordsExtract:
             for tag_tuple in tokenized_text_pos_tagged:
                 if tag_tuple[1] == 'NOUN':
                     f.write(tag_tuple[0] + "\n")
-
