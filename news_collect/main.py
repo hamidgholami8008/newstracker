@@ -1,4 +1,3 @@
-from news_keywords.database_crud import DBOperations
 from news_keywords.keywords_extract import KeywordsExtract
 from hazm import *
 import pandas as pd
@@ -45,45 +44,27 @@ with col3:
     uploaded_file = st.file_uploader(label="فرستادن فایل", type="json", label_visibility="hidden")
 
 
-# keyword_extract = KeywordsExtract()
-
-# keyword_extract.get_tokenized_text(sentence)
-
-# db = DBOperations()
-# cur = db.get_cursor_find('news_list')
-# for doc in cur:
-#     keywords = keyword_extract.find_keywords_of_sentence(doc['title'])
-#     noun_keywords = keyword_extract.get_noun_keywords_from_list(keywords)
-#     keywords_dict = {'sentence': doc['title'], 'keywords': noun_keywords}
-#     list_of_keywords_dict.append(keywords_dict)
-
 keyword_extract = KeywordsExtract(Normalizer(), POSTagger('pos_tagger.model'))
-keywords_dict = {}
 list_of_keywords_dict = []
 sentences = input_st.split(",")
 
-if uploaded_file is None:
-    for sentence in sentences:
-        keywords = keyword_extract.find_keywords_of_sentence(sentence)
-        noun_keywords = keyword_extract.get_noun_keywords_from_list(keywords)
-        keywords_dict = {'sentence': sentence, 'keywords': noun_keywords}
-        list_of_keywords_dict.append(keywords_dict)
 
-    if list_of_keywords_dict is not None:
-        df = pd.DataFrame(list_of_keywords_dict)
+def show_dict_in_streamlit(the_dict_or_list: dict | list):
+
+    if the_dict_or_list is not None:
+        df = pd.DataFrame(the_dict_or_list)
         df.rename(columns={"sentence": "جمله", "keywords":"کلیدواژه"}, inplace=True)
         st.dataframe(df, use_container_width=True, hide_index=True, column_order={"کلیدواژه", "جمله"})
+
+
+if uploaded_file is None:
+    list_of_keywords_dict = keyword_extract.extract_keywords_of_list_to_dict(sentences)
+
+    show_dict_in_streamlit(list_of_keywords_dict)
+
 else:
     dict_of_uploaded = json.load(uploaded_file)
-    for doc in dict_of_uploaded:
-        keywords = keyword_extract.find_keywords_of_sentence(doc['title'])
-        noun_keywords = keyword_extract.get_noun_keywords_from_list(keywords)
-        keywords_dict = {'sentence': doc['title'], 'keywords': noun_keywords}
-        list_of_keywords_dict.append(keywords_dict)
+    list_of_keywords_dict = keyword_extract.extract_keywords_of_json_to_dict(dict_of_uploaded, "title")
 
-    if list_of_keywords_dict is not None:
-        df = pd.DataFrame(list_of_keywords_dict)
-        df.rename(columns={"sentence": "جمله", "keywords":"کلیدواژه"}, inplace=True)
-        st.dataframe(df, use_container_width=True, hide_index=True, column_order={"کلیدواژه", "جمله"})
-
+    show_dict_in_streamlit(list_of_keywords_dict)
 
