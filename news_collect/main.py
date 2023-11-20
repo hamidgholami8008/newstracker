@@ -68,3 +68,5 @@ else:
 
     show_dict_in_streamlit(list_of_keywords_dict)
 
+    json_string = json.dumps(list_of_keywords_dict)
+    st.download_button(data=json_string, label="JSON دانلود فایل به صورت", file_name="sentence_keywords.json", use_container_width=True)
