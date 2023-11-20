@@ -11,17 +11,17 @@ sys.path.append("..")
 
 class NewsCollectPipeline:
 
-    db_obj = None
-    COL_NAME = "news_list"
-
-    def open_spider(self, spider):
-        logging.warning("SPIDER STARTED")
-        self.db_obj = DBOperations()
-
-    def close_spider(self, spider):
-        logging.warning("SPIDER STOPPED")
-        self.db_obj.close_client()
+    # db_obj = None
+    # COL_NAME = "news_list2"
+    #
+    # def open_spider(self, spider):
+    #     logging.warning("SPIDER STARTED")
+    #     self.db_obj = DBOperations()
+    #
+    # def close_spider(self, spider):
+    #     logging.warning("SPIDER STOPPED")
+    #     self.db_obj.close_client()
 
     def process_item(self, item, spider):
-        self.db_obj.save_dict_as_one_to_db(item, self.COL_NAME)
+        # self.db_obj.save_dict_as_one_to_db(item, self.COL_NAME)
         return item
