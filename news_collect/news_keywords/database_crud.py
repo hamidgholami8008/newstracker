@@ -44,5 +44,9 @@ class DBOperations:
 
         col.insert(the_dict)
 
+    def find_keyword(self, keyword: str, collection_name: str):
+        col = self.db.get_collection(collection_name)
+        return col.find({'keywords': {"$in": [keyword]}})
+
     def close_client(self):
         self.client.close()
