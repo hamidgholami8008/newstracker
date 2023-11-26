@@ -2,6 +2,7 @@ import requests
 import scrapy
 from scrapy_selenium import SeleniumRequest
 
+
 class IfnnSpider(scrapy.Spider):
     name = "ifnn"
 

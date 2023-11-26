@@ -7,11 +7,34 @@ import json
 
 st.set_page_config(layout='wide')
 
-#title
-title_style = "<style>h1 {text-align: center;}</style>"
-st.markdown(title_style, unsafe_allow_html=True)
-st.columns(3)[2].header("استخراج کلیدواژه از متن اخبار")
+page_bg_img = '''
+    <style>
+    .stApp {
+        background-image: linear-gradient( 95.2deg, rgba(173,252,234,1) 26.8%, rgba(192,229,246,1) 64% );
+        background-size: cover;
+    }
+    </style>
+    '''
 
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
+
+@st.cache_data
+def show_title():
+    title_style = "<style>h1 {text-align: center;}</style>"
+    st.markdown(title_style, unsafe_allow_html=True)
+    st.columns(3)[2].header("استخراج کلیدواژه از متن اخبار")
+
+
+def show_dict_in_streamlit(the_dict_or_list: dict | list):
+
+    if the_dict_or_list is not None:
+        df = pd.DataFrame(the_dict_or_list)
+        df.rename(columns={"sentence": "جمله", "keywords":"کلیدواژه"}, inplace=True)
+        st.dataframe(df, use_container_width=True, hide_index=True, column_order={"کلیدواژه", "جمله"})
+
+
+show_title()
 
 st.markdown(
     """
@@ -47,15 +70,6 @@ with col3:
 keyword_extract = KeywordsExtract(Normalizer(), POSTagger('pos_tagger.model'))
 list_of_keywords_dict = []
 sentences = input_st.split(",")
-
-
-def show_dict_in_streamlit(the_dict_or_list: dict | list):
-
-    if the_dict_or_list is not None:
-        df = pd.DataFrame(the_dict_or_list)
-        df.rename(columns={"sentence": "جمله", "keywords":"کلیدواژه"}, inplace=True)
-        st.dataframe(df, use_container_width=True, hide_index=True, column_order={"کلیدواژه", "جمله"})
-
 
 if uploaded_file is None:
     list_of_keywords_dict = keyword_extract.extract_keywords_of_list_to_dict(sentences)

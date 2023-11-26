@@ -12,7 +12,7 @@ sys.path.append("..")
 class NewsCollectPipeline:
 
     # db_obj = None
-    # COL_NAME = "news_list2"
+    # COL_NAME = "news_title_link_sentence"
     #
     # def open_spider(self, spider):
     #     logging.warning("SPIDER STARTED")
