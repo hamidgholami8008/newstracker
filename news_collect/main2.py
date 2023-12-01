@@ -1,6 +1,3 @@
-from news_keywords.keywords_extract import KeywordsExtract
-from hazm import *
-import pandas as pd
 import streamlit as st
 from news_keywords.database_crud import DBOperations
 
@@ -31,19 +28,19 @@ st.markdown(
         {
             text-align: end;
             direction: rtl;
-        } 
+        }
 
         div[data-testid="column"]:nth-of-type(2)
         {
             text-align: start;
             direction: rtl;
-        } 
+        }
     </style>
     """,unsafe_allow_html=True
 )
 col1, col2= st.columns(2)
 with col1:
-    st.markdown("<style>input { direction: rtl; height: 50px;} .st-emotion-cache-0 {display: none}</style>", unsafe_allow_html=True)
+    st.markdown("<style>input { direction: rtl; height: 50px;} span.st-emotion-cache-0 {display: none}</style>", unsafe_allow_html=True)
     input_st = st.text_input(placeholder="مانند:  صندوق سرمایه گذاری", label="ورودی متن", max_chars=20, label_visibility="collapsed", help="تگ")
 
 with col2:
@@ -63,7 +60,7 @@ for input_word in array_of_input:
 
 content_style = """
     <style>
-    .content 
+    .content
     {
         text-align: start:
         height: 150px;
@@ -75,8 +72,8 @@ content_style = """
 
         border-radius: 16px;
         direction: rtl;
-    }    
-    .summary
+    }
+    .sentence
     {
         text-align: start;
         direction: rtl;
@@ -92,5 +89,5 @@ for result in array_of_results:
         st.markdown(content_style, unsafe_allow_html=True)
         st.write(f"<div class='content'>"
                  f"<a href='{doc['link']}'>{doc['title']}</a>"
-                 f"<p class='summary'>{doc['summary']}</p>"
+                 f"<p class='sentence'>{(doc['sentence'])[:170]}</p>"
                  f"</div>", unsafe_allow_html=True)

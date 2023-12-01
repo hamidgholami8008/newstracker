@@ -55,6 +55,10 @@ class KeywordsExtract:
 
         return noun_keywords
 
+    def find_noun_keywords_of_sentence(self, sentence: str):
+        tokenized_text_pos_tagged = self.__find_keywords_of_sentence(sentence)
+        return self.__get_noun_keywords_from_list(tokenized_text_pos_tagged)
+
     @staticmethod
     def append_noun_keywords_to_file(tokenized_text_pos_tagged: list, file: str):
         with open(file, "a") as f:
@@ -94,3 +98,4 @@ class KeywordsExtract:
             list_of_keywords_dict.append(keywords_dict)
 
         return list_of_keywords_dict
+
