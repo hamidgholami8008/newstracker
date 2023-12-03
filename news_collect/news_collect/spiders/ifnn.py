@@ -6,7 +6,6 @@ from scrapy_selenium import SeleniumRequest
 class IfnnSpider(scrapy.Spider):
     name = "ifnn"
 
-
     next_page_number = 2
 
     def start_requests(self):

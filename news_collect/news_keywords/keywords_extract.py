@@ -53,6 +53,9 @@ class KeywordsExtract:
             if tag_tuple[1] == 'NOUN':
                 noun_keywords.append(tag_tuple[0])
 
+        noun_keywords = set(noun_keywords)
+        noun_keywords = list(noun_keywords)
+
         return noun_keywords
 
     def find_noun_keywords_of_sentence(self, sentence: str):

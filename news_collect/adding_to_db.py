@@ -13,7 +13,7 @@ for doc in cur:
     new_dict_list.append({
         'title': doc['title'],
         'link': doc['link'],
-        'sentence': doc['sentence'],
+        'summary': doc['sentence'],
         'keywords': keyword_extract.find_noun_keywords_of_sentence(doc['sentence'])
     })
 

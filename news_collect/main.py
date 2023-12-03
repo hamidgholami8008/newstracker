@@ -7,6 +7,17 @@ import json
 
 st.set_page_config(layout='wide')
 
+col_name_input_style = '''
+    <style>
+    input[aria-label="col_name"] {
+        text-align : center;
+    } 
+    .st-emotion-cache-1qnt2ew > div:nth-child(2) > div {
+        box-width : 100px;
+    }
+    </style>
+'''
+
 page_bg_img = '''
     <style>
     .stApp {
@@ -77,10 +88,18 @@ if uploaded_file is None:
     show_dict_in_streamlit(list_of_keywords_dict)
 
 else:
-    dict_of_uploaded = json.load(uploaded_file)
-    list_of_keywords_dict = keyword_extract.extract_keywords_of_json_to_dict(dict_of_uploaded, "title")
+    col_name_input = st.text_input(placeholder="نام ستون جملات", label="col_name", label_visibility="hidden")
 
-    show_dict_in_streamlit(list_of_keywords_dict)
+    st.markdown(col_name_input_style, unsafe_allow_html=True)
 
-    json_string = json.dumps(list_of_keywords_dict)
-    st.download_button(data=json_string, label="JSON دانلود فایل به صورت", file_name="sentence_keywords.json", use_container_width=True)
+    if col_name_input == "":
+        st.text("نام ستون خالی است. لطفا وارد کنید.")
+
+    else:
+        dict_of_uploaded = json.load(uploaded_file)
+        list_of_keywords_dict = keyword_extract.extract_keywords_of_json_to_dict(dict_of_uploaded, col_name_input)
+
+        show_dict_in_streamlit(list_of_keywords_dict)
+
+        json_string = json.dumps(list_of_keywords_dict)
+        st.download_button(data=json_string, label="JSON دانلود فایل به صورت", file_name="sentence_keywords.json", use_container_width=True)

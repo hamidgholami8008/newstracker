@@ -89,5 +89,5 @@ for result in array_of_results:
         st.markdown(content_style, unsafe_allow_html=True)
         st.write(f"<div class='content'>"
                  f"<a href='{doc['link']}'>{doc['title']}</a>"
-                 f"<p class='sentence'>{(doc['sentence'])[:170]}</p>"
+                 f"<p class='sentence'>{(doc['summary'])[:170]}</p>"
                  f"</div>", unsafe_allow_html=True)
