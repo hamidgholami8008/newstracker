@@ -53,16 +53,16 @@ st.markdown(
         div[data-testid="column"]:nth-of-type(1)
         {
             text-align: end;
-        } 
+        }
 
         div[data-testid="column"]:nth-of-type(2)
         {
             text-align: center;
-        } 
+        }
         div[data-testid="column"]:nth-of-type(3)
         {
             text-align: start;
-        } 
+        }
     </style>
     """,unsafe_allow_html=True
 )
@@ -77,8 +77,9 @@ with col2:
 with col3:
     uploaded_file = st.file_uploader(label="فرستادن فایل", type="json", label_visibility="hidden")
 
-
-keyword_extract = KeywordsExtract(Normalizer(), POSTagger('pos_tagger.model'))
+normalizer = Normalizer()
+pos_tag_obj = POSTagger(model='pos_tagger.model')
+keyword_extract = KeywordsExtract(normalizer, pos_tag_obj)
 list_of_keywords_dict = []
 sentences = input_st.split(",")
 
