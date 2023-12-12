@@ -1,9 +1,9 @@
-from news_keywords.keywords_extract import KeywordsExtract
+from keyword_extract.keywords_extract_context import KeywordExtractContext
+from keyword_extract.hazm_keywords_extract import HazmKeywordsExtract
 from hazm import *
 import pandas as pd
 import streamlit as st
 import json
-
 
 st.set_page_config(layout='wide')
 
@@ -171,6 +171,7 @@ st.markdown(hint_text_style, unsafe_allow_html=True)
 st.markdown(col_name_input_style, unsafe_allow_html=True)
 st.markdown(loading_state_style, unsafe_allow_html=True)
 
+
 @st.cache_data
 def show_title():
     title_style = "<style>h1 {text-align: center;}</style>"
@@ -198,7 +199,11 @@ show_title()
 st.markdown(streamlit_columns_style,unsafe_allow_html=True)
 col1, col2, col3 = st.columns(3)
 with col1:
-    input_st = st.text_input(placeholder="مانند:  جمله اول,جمله دوم,جمله سوم", label="ورودی تگ", max_chars=500, label_visibility="collapsed", help="تگ")
+    input_st = st.text_input(placeholder="مانند:  جمله اول,جمله دوم,جمله سوم",
+                             label="ورودی تگ",
+                             max_chars=500,
+                             label_visibility="collapsed",
+                             help="تگ")
 
 with col2:
     """
@@ -209,7 +214,7 @@ with col3:
 
 normalizer = Normalizer()
 pos_tag_obj = POSTagger(model='pos_tagger.model')
-keyword_extract = KeywordsExtract(normalizer, pos_tag_obj)
+keyword_extract = KeywordExtractContext(HazmKeywordsExtract(pos_tag_obj))
 list_of_keywords_dict = []
 sentences = input_st.split(",")
 
@@ -217,7 +222,7 @@ if input_st != "":
     change_dataframe_style(True)
 
 if uploaded_file is None:
-    list_of_keywords_dict = keyword_extract.extract_keywords_of_list_to_dict(sentences)
+    list_of_keywords_dict = keyword_extract.extract_keywords(the_input=sentences)
 
     show_dict_in_streamlit(list_of_keywords_dict)
 
@@ -236,14 +241,16 @@ else:
             change_dataframe_style(True)
 
             dict_of_uploaded = json.load(uploaded_file)
-            list_of_keywords_dict = keyword_extract.extract_keywords_of_json_to_dict(dict_of_uploaded, col_name_input)
-
+            list_of_keywords_dict = keyword_extract.extract_keywords(the_input=dict_of_uploaded,
+                                                                     name_of_sentence_key=col_name_input)
             show_dict_in_streamlit(list_of_keywords_dict)
 
             st.markdown(loading_state_remove, unsafe_allow_html=True)
 
             json_string = json.dumps(list_of_keywords_dict)
-            st.download_button(data=json_string, label="JSON دانلود فایل به صورت", file_name="sentence_keywords.json", use_container_width=True)
+            st.download_button(data=json_string, label="JSON دانلود فایل به صورت", file_name="sentence_keywords.json",
+                               use_container_width=True)
         except:
             st.markdown(loading_state_remove, unsafe_allow_html=True)
-            st.markdown("<div class='hint_txt'><p>.نام ستون اشتباه است. لطفا دوباره تلاش کنید</p></div>", unsafe_allow_html=True)
+            st.markdown("<div class='hint_txt'><p>.نام ستون اشتباه است. لطفا دوباره تلاش کنید</p></div>",
+                        unsafe_allow_html=True)

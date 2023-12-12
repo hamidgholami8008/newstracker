@@ -1,5 +1,5 @@
 import streamlit as st
-from news_keywords.database_crud import DBOperations
+from keyword_extract.database_crud import DBOperations
 
 
 # st.set_page_config(layout='wide')
@@ -91,3 +91,4 @@ for result in array_of_results:
                  f"<a href='{doc['link']}'>{doc['title']}</a>"
                  f"<p class='sentence'>{(doc['summary'])[:170]}</p>"
                  f"</div>", unsafe_allow_html=True)
+
