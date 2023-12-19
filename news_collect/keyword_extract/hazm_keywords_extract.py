@@ -3,6 +3,7 @@ import re
 from hazm import *
 import itertools
 from .keywords_extract import KeywordExtract
+from collections import Counter
 
 
 class HazmKeywordsExtract(KeywordExtract):
@@ -77,7 +78,14 @@ class HazmKeywordsExtract(KeywordExtract):
 
         # The regular expression pattern for removing simple plural words
         characters_to_remove = r"هایی"
-        plural_word_pattern = rf"{characters_to_remove}(?=\b|\s)"
+        plural_word_pattern_1 = rf"{characters_to_remove}(?=\b|\s)"
+
+        # The regular expression pattern for removing simple plural words
+        characters_to_remove = r"ها"
+        plural_word_pattern_2 = rf"{characters_to_remove}(?=\b|\s)"
+
+        # The regular expression pattern for removing english words
+        english_re = r'^[a-zA-Z\s]+$'
 
         # the regular expression pattern for removing special characters
         special_characters_pattern = r'[.,!-]'
@@ -86,12 +94,31 @@ class HazmKeywordsExtract(KeywordExtract):
 
         for sentence in sentences:
             word = re.sub(short_word_pattern, '', sentence)
-            word = re.sub(plural_word_pattern, '', word)
+            word = re.sub(plural_word_pattern_1, '', word)
+            word = re.sub(plural_word_pattern_2, '', word)
             word = re.sub(special_characters_pattern, '', word)
-            if word != "":
+            word = re.sub(english_re, '', word)
+            if word != "" and word != "٫":
                 temp_list.append(word)
 
         return temp_list
+
+    def remove_not_repeated_words(self, list_of_docs):
+
+        # Step 1: Flatten the list of keywords
+        all_keywords = [keyword for document in list_of_docs for keyword in document["keywords"]]
+
+        # Step 2: Count the occurrences of each word
+        word_counts = Counter(all_keywords)
+
+        # Step 3: Filter out words that occur only once
+        non_singleton_words = {word for word, count in word_counts.items() if count > 1}
+
+        # Step 4: Update the keywords list in each document
+        for document in list_of_docs:
+            document["keywords"] = [keyword for keyword in document["keywords"] if keyword in non_singleton_words]
+
+        return list_of_docs
 
     @staticmethod
     def append_noun_keywords_to_file(tokenized_text_pos_tagged: list, file: str):
@@ -118,6 +145,7 @@ class HazmKeywordsExtract(KeywordExtract):
             # storing the dict in the list
             list_of_keywords_dict.append(keywords_dict)
 
+        list_of_keywords_dict = self.remove_not_repeated_words(list_of_keywords_dict)
         return list_of_keywords_dict
 
     # extracts the keywords from the input list then saves them into a list of dictionaries and returns it
@@ -135,6 +163,7 @@ class HazmKeywordsExtract(KeywordExtract):
             # storing the dict in the list
             list_of_keywords_dict.append(keywords_dict)
 
+        list_of_keywords_dict = self.remove_not_repeated_words(list_of_keywords_dict)
         return list_of_keywords_dict
 
     def extract_keywords(self, the_input, name_of_sentence_key=""):
